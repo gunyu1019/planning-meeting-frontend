@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kakao_map_sdk/kakao_map_sdk.dart';
-import 'package:planning_meeting/component/location_item_component.dart';
+import 'package:planning_meeting/widget/location_item_component.dart';
 import 'package:planning_meeting/model/location.dart';
 import 'package:planning_meeting/provider/travel_editor_provider.dart';
 
@@ -205,7 +204,7 @@ class SetupComponentState extends ConsumerState<SetupComponent> {
             ],
           ),
           SizedBox(
-            height: 30,
+            height: 36,
             child: tripMeetingLocation == null ? addComment("+ 버튼을 클릭하여 여정이 시작되는 장소를 등록해보세요!") : LocationItemComponent(
              location: tripMeetingLocation!,
               onRemoveButtonEvent: () {
@@ -242,7 +241,7 @@ class SetupComponentState extends ConsumerState<SetupComponent> {
             ],
           ),
           SizedBox(
-            height: 30,
+            height: 36,
             child: tripHotelLocation == null ? addComment("+ 버튼을 클릭하여 숙박하는 장소를 등록해보세요!") : LocationItemComponent(
              location: tripHotelLocation!,
               onRemoveButtonEvent: () {
@@ -261,7 +260,7 @@ class SetupComponentState extends ConsumerState<SetupComponent> {
             height: 50,
             child: ElevatedButton(
               onPressed: () {
-                _showWarning('계획하기 버튼 클릭!');
+                debugPrint('계획하기 버튼 클릭!');
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.deepPurple,

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:planning_meeting/component/setup_component.dart';
+import 'package:planning_meeting/widget/setup_component.dart';
 
 import 'assistant_chat_component.dart' show AssistantChatComponent;
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:planning_meeting/page/travel_editor.dart';
+import 'package:planning_meeting/screen/travel_editor.dart';
 
 void main() {
   runApp(const MyApp());

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../component/map_component.dart';
-import '../component/menu_component.dart';
+import '../widget/map_component.dart';
+import '../widget/menu_component.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({super.key});
