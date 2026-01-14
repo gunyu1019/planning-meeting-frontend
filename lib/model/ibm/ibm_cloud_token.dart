@@ -15,6 +15,8 @@ class IBMAuthentic {
     return '$tokenType $accessToken';
   }
 
+  bool isExpired() => DateTime.now().compareTo(expiration) > 0;
+
   factory IBMAuthentic.fromJson(Map<String, dynamic> json) {
     return IBMAuthentic._(
       json['access_token'],
