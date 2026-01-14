@@ -2,6 +2,7 @@ import 'package:flutter_chat_core/flutter_chat_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:kakao_map_sdk/kakao_map_sdk.dart';
+import 'package:planning_meeting/model/agent_message.dart';
 import '../model/place_category.dart';
 import '../services/ibm_cloud_service.dart';
 import '../services/ibm_watsonx_service.dart';
@@ -65,6 +66,9 @@ final mapControllerProvider = StateProvider((ref) => MapController());
 final ibmCloudProvider = Provider<IBMCloud?>((ref) => null);
 final ibmWatsonXProvider = Provider<WatsonX?>((ref) => null);
 
-final chatControllerProvider = StateProvider<ChatController?>(
-  (ref) => InMemoryChatController(),
-);
+final ibmChatAgent = Provider<Future<AgentMessage> Function(String content, [String? threadId])?>((ref) => null);
+
+final chatControllerProvider = Provider<ChatController>((ref) {
+  return InMemoryChatController();
+});
+final messages = Provider<List<AgentMessage>>((ref) => []);

@@ -1,4 +1,8 @@
+import 'dart:convert';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_chat_core/flutter_chat_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:planning_meeting/widget/location_item_component.dart';
 import 'package:planning_meeting/model/location.dart';
@@ -94,7 +98,7 @@ class SetupComponentState extends ConsumerState<SetupComponent> {
                       final String timeStr =
                           "${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}";
 
-                      _endDateController.text = "$dateStr $timeStr";
+                      _startDateController.text = "$dateStr $timeStr";
                     });
                   }), // 클릭 시 달력 뜸
                   decoration: const InputDecoration(
@@ -357,7 +361,20 @@ class SetupComponentState extends ConsumerState<SetupComponent> {
       "meetingEndDate": tripEndTime?.toIso8601String(),
       "wishToVisit": wishToVisit.map((e) => e.toMessage()).toList(),
     };
-
+    final assistantInitialAnswer = await ref.read(ibmChatAgent)?.call(jsonEncode(payload));
+    if (assistantInitialAnswer != null) {
+      ref.read(messages).add(assistantInitialAnswer);
+    }
+    ref.read(chatControllerProvider).insertMessage(
+      TextMessage(
+        // Better to use UUID or similar for the ID - IDs must be unique
+        id: '${Random().nextInt(1000) + 1}',
+        authorId: 'assistant',
+        createdAt: DateTime.now().toUtc(),
+        text: assistantInitialAnswer?.content ?? "여행 계획을 불러오는데 실패하였습니다.",
+      ),
+    );
+    ref.read(menuControllerProvider.notifier).changePage("result");
   }
 
   void _showWarning(String message) {
