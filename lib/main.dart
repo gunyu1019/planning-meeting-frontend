@@ -12,7 +12,7 @@ void main() async {
 
   await dotenv.load(fileName: 'assets/config/.env');
   await KakaoMapSdk.instance.initialize(dotenv.env['KAKAO_API_KEY']!);
-  
+
   final instanceUrl = dotenv.env['IBM_CLOUD_INSTANCE_URL']!;
   final agentId = dotenv.env['IBM_WATSONX_ORCHESTRATE_AGENT_ID']!;
   final environmentId = dotenv.env['IBM_WATSONX_ORCHESTRATE_ENVIRONMENT_ID']!;
@@ -24,15 +24,12 @@ void main() async {
   // ibmWatsonX.chat(agentId: agentId, environmentId: environmentId, message: "너는 무엇을 할 수 있어?").then((message) => debugPrint(message.content));
 
   runApp(
-      ProviderScope(
-        overrides: [
-          ibmCloudProvider.overrideWithValue(ibmCloud),
-          ibmWatsonXProvider.overrideWithValue(ibmWatsonX),
-        ],
-        child: MaterialApp(
-            theme: ThemeData(),
-            home: const MainPage()
-        ),
-    )
+    ProviderScope(
+      overrides: [
+        ibmCloudProvider.overrideWithValue(ibmCloud),
+        ibmWatsonXProvider.overrideWithValue(ibmWatsonX),
+      ],
+      child: MaterialApp(theme: ThemeData(), home: const MainPage()),
+    ),
   );
 }

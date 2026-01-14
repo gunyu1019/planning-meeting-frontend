@@ -12,16 +12,17 @@ class WatsonX {
 
   final String instanceUrl;
 
-  WatsonX(IBMAuthentic accessToken, this.instanceUrl) :
-        __accessToken = accessToken,
-        _dio = Dio(
-          BaseOptions(
-            baseUrl: instanceUrl,
-            headers: {
-              "Accept": "application/json",
-              "Content-Type": "application/json"
-          })
-        ) {
+  WatsonX(IBMAuthentic accessToken, this.instanceUrl)
+    : __accessToken = accessToken,
+      _dio = Dio(
+        BaseOptions(
+          baseUrl: instanceUrl,
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+          },
+        ),
+      ) {
     _dio.options.headers["Authorization"] = __accessToken.toString();
   }
 
@@ -47,25 +48,21 @@ class WatsonX {
     final parameter = {
       "stream": stream,
       "stream_timeout": max_timeout,
-      "multipleContent": multipleContent
+      "multipleContent": multipleContent,
     };
     final data = {
       "agent_id": agentId,
       "environment_id": environmentId,
-      "message": {
-        "role": "user",
-        "response_type": "text",
-        "content": message
-      },
-      "thread_id": threadId
+      "message": {"role": "user", "response_type": "text", "content": message},
+      "thread_id": threadId,
     };
 
     if (stream) {
       final response = await _dio.post<ResponseBody>(
-          "/v1/orchestrate/runs",
-          queryParameters: parameter,
-          data: data,
-          options: Options(responseType: ResponseType.stream)
+        "/v1/orchestrate/runs",
+        queryParameters: parameter,
+        data: data,
+        options: Options(responseType: ResponseType.stream),
       );
       Stream<List<int>> stream = response.data!.stream;
 
@@ -73,15 +70,18 @@ class WatsonX {
       List<int> lastChunk = await stream.last;
 
       String rawData = utf8.decode(lastChunk);
-      String jsonRawData = '[${rawData.replaceAll("}\n", "},\n")}]'.replaceAll("},\n]", "}\n]");
-      List<dynamic> result = json.  decode(jsonRawData);
+      String jsonRawData = '[${rawData.replaceAll("}\n", "},\n")}]'.replaceAll(
+        "},\n]",
+        "}\n]",
+      );
+      List<dynamic> result = json.decode(jsonRawData);
       return result.last["data"]["run_id"];
     }
     final response = await _dio.post(
-        "/v1/orchestrate/runs",
-        queryParameters: parameter,
-        data: data,
-        options: Options(responseType: ResponseType.json)
+      "/v1/orchestrate/runs",
+      queryParameters: parameter,
+      data: data,
+      options: Options(responseType: ResponseType.json),
     );
     return response.data["run_id"];
   }
@@ -92,14 +92,14 @@ class WatsonX {
     required String agentId,
     required String environmentId,
     required String message,
-    String? threadId
+    String? threadId,
   }) async {
     final runId = await _createRun(
       agentId: agentId,
       environmentId: environmentId,
       message: message,
       threadId: threadId,
-      stream: true
+      stream: true,
     );
     final taskResult = await _getSpecificRun(runId);
     final agentResult = taskResult["result"]["data"]["message"];
@@ -110,7 +110,7 @@ class WatsonX {
       taskResult["thread_id"],
       taskResult["tenant_id"],
       DateTime.parse(agentResult["created_on"]),
-      agentResult["content"][0]["text"]
+      agentResult["content"][0]["text"],
     );
     return agentMessage;
   }

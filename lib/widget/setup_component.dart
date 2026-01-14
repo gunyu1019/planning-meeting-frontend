@@ -18,15 +18,15 @@ class SetupComponentState extends ConsumerState<SetupComponent> {
   final TextEditingController _endDateController = TextEditingController();
 
   // Agent AI로 보낼 여러 변수들~
-  TimeOfDay? tripStartTime;
-  TimeOfDay? tripEndTime;
+  DateTime? tripStartTime;
+  DateTime? tripEndTime;
   LocationModel? tripHotelLocation;
   LocationModel? tripMeetingLocation;
   List<LocationModel> wishToVisit = [];
 
   Future<void> _selectDateTime(
     BuildContext context,
-    TextEditingController controller,
+    void Function(DateTime date, TimeOfDay time) onChoose,
   ) async {
     // 1. 날짜 선택
     final DateTime? pickedDate = await showDatePicker(
@@ -46,15 +46,7 @@ class SetupComponentState extends ConsumerState<SetupComponent> {
     );
 
     if (pickedTime != null) {
-      setState(() {
-        // 3. 날짜와 시간을 합쳐서 "YYYY-MM-DD HH:mm" 형식으로 표시
-        final String dateStr =
-            "${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}";
-        final String timeStr =
-            "${pickedTime.hour.toString().padLeft(2, '0')}:${pickedTime.minute.toString().padLeft(2, '0')}";
-
-        controller.text = "$dateStr $timeStr";
-      });
+      onChoose(pickedDate, pickedTime);
     }
   }
 
@@ -90,10 +82,21 @@ class SetupComponentState extends ConsumerState<SetupComponent> {
                 child: TextField(
                   controller: _startDateController, // 컨트롤러 연결
                   readOnly: true, // 타이핑 방지 (오타 방지)
-                  onTap: () => _selectDateTime(
-                    context,
-                    _startDateController,
-                  ), // 클릭 시 달력 뜸
+                  onTap: () => _selectDateTime(context, (date, time) {
+                    tripStartTime = date.copyWith(
+                      hour: time.hour,
+                      minute: time.minute,
+                    );
+                    setState(() {
+                      // 3. 날짜와 시간을 합쳐서 "YYYY-MM-DD HH:mm" 형식으로 표시
+                      final String dateStr =
+                          "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+                      final String timeStr =
+                          "${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}";
+
+                      _endDateController.text = "$dateStr $timeStr";
+                    });
+                  }), // 클릭 시 달력 뜸
                   decoration: const InputDecoration(
                     hintText: '시작 일시',
                     border: OutlineInputBorder(),
@@ -110,8 +113,21 @@ class SetupComponentState extends ConsumerState<SetupComponent> {
                 child: TextField(
                   controller: _endDateController, // 컨트롤러 연결
                   readOnly: true, // 타이핑 방지 (오타 방지)
-                  onTap: () =>
-                      _selectDateTime(context, _endDateController), // 클릭 시 달력 뜸
+                  onTap: () => _selectDateTime(context, (date, time) {
+                    tripEndTime = date.copyWith(
+                      hour: time.hour,
+                      minute: time.minute,
+                    );
+                    setState(() {
+                      // 3. 날짜와 시간을 합쳐서 "YYYY-MM-DD HH:mm" 형식으로 표시
+                      final String dateStr =
+                          "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+                      final String timeStr =
+                          "${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}";
+
+                      _endDateController.text = "$dateStr $timeStr";
+                    });
+                  }), // 클릭 시 달력 뜸
                   decoration: const InputDecoration(
                     hintText: '종료 일시',
                     border: OutlineInputBorder(),
@@ -138,13 +154,24 @@ class SetupComponentState extends ConsumerState<SetupComponent> {
                   IconButton(
                     onPressed: () {
                       _showComment("방문해보고 싶은 장소를 클릭해주세요!");
-                      ref.read(mapControllerProvider.notifier).state.onAddPoi(PlaceCategory.tourism, (position, poi) {
-                        final tempName = "나는 여길 가보고 싶어! (${wishToVisit.length + 1})";
-                        setState(() {
-                          wishToVisit.add(LocationModel(id: poi.id, name: tempName, position: position, category: PlaceCategory.tourism));
-                        });
-                        _showComment("방문하고 싶은 장소가 등록되었습니다.");
-                      });
+                      ref.read(mapControllerProvider.notifier).state.onAddPoi(
+                        PlaceCategory.tourism,
+                        (position, poi) {
+                          final tempName =
+                              "나는 여길 가보고 싶어! (${wishToVisit.length + 1})";
+                          setState(() {
+                            wishToVisit.add(
+                              LocationModel(
+                                id: poi.id,
+                                name: tempName,
+                                position: position,
+                                category: PlaceCategory.tourism,
+                              ),
+                            );
+                          });
+                          _showComment("방문하고 싶은 장소가 등록되었습니다.");
+                        },
+                      );
                     },
                     icon: const Icon(
                       Icons.add_circle,
@@ -175,7 +202,7 @@ class SetupComponentState extends ConsumerState<SetupComponent> {
                             wishToVisit.removeAt(index);
                           });
                         },
-                      )
+                      ),
                     ),
             ),
           ),
@@ -190,30 +217,42 @@ class SetupComponentState extends ConsumerState<SetupComponent> {
               ),
               Expanded(child: SizedBox.shrink()),
               IconButton(
-                onPressed: tripMeetingLocation != null ? null : () {
-                      _showComment("집합 장소를 지도에서 클릭해주세요!");
-                      ref.read(mapControllerProvider.notifier).state.onAddPoi(PlaceCategory.hotel, (position, poi) {
-                        setState(() {
-                          tripMeetingLocation = LocationModel(id: poi.id, name: "집합 장소", position: position, category: PlaceCategory.hotel);
-                        });
-                        _showComment("집합 장소를 등록되었습니다.");
-                      });
-                },
+                onPressed: tripMeetingLocation != null
+                    ? null
+                    : () {
+                        _showComment("집합 장소를 지도에서 클릭해주세요!");
+                        ref.read(mapControllerProvider.notifier).state.onAddPoi(
+                          PlaceCategory.hotel,
+                          (position, poi) {
+                            setState(() {
+                              tripMeetingLocation = LocationModel(
+                                id: poi.id,
+                                name: "집합 장소",
+                                position: position,
+                                category: PlaceCategory.hotel,
+                              );
+                            });
+                            _showComment("집합 장소를 등록되었습니다.");
+                          },
+                        );
+                      },
                 icon: const Icon(Icons.add_circle, color: Colors.deepPurple),
               ),
             ],
           ),
           SizedBox(
             height: 36,
-            child: tripMeetingLocation == null ? addComment("+ 버튼을 클릭하여 여정이 시작되는 장소를 등록해보세요!") : LocationItemComponent(
-             location: tripMeetingLocation!,
-              onRemoveButtonEvent: () {
-                setState(() {
-                  tripMeetingLocation = null;
-                });
-                _showComment("집합 장소가 삭제되었습니다.");
-              },
-            ),
+            child: tripMeetingLocation == null
+                ? addComment("+ 버튼을 클릭하여 여정이 시작되는 장소를 등록해보세요!")
+                : LocationItemComponent(
+                    location: tripMeetingLocation!,
+                    onRemoveButtonEvent: () {
+                      setState(() {
+                        tripMeetingLocation = null;
+                      });
+                      _showComment("집합 장소가 삭제되었습니다.");
+                    },
+                  ),
           ),
           const SizedBox(height: 16),
 
@@ -227,30 +266,42 @@ class SetupComponentState extends ConsumerState<SetupComponent> {
               ),
               Expanded(child: SizedBox.shrink()),
               IconButton(
-                onPressed: tripHotelLocation == null ? () {
-                      _showComment("숙박하는 장소를 지도에서 클릭해주세요!");
-                      ref.read(mapControllerProvider.notifier).state.onAddPoi(PlaceCategory.hotel, (position, poi) {
-                        setState(() {
-                          tripHotelLocation = LocationModel(id: poi.id, name: "호텔", position: position, category: PlaceCategory.hotel);
-                        });
-                        _showComment("숙소가 등록되었습니다.");
-                      });
-                } : null,
+                onPressed: tripHotelLocation == null
+                    ? () {
+                        _showComment("숙박하는 장소를 지도에서 클릭해주세요!");
+                        ref.read(mapControllerProvider.notifier).state.onAddPoi(
+                          PlaceCategory.hotel,
+                          (position, poi) {
+                            setState(() {
+                              tripHotelLocation = LocationModel(
+                                id: poi.id,
+                                name: "호텔",
+                                position: position,
+                                category: PlaceCategory.hotel,
+                              );
+                            });
+                            _showComment("숙소가 등록되었습니다.");
+                          },
+                        );
+                      }
+                    : null,
                 icon: const Icon(Icons.add_circle, color: Colors.deepPurple),
               ),
             ],
           ),
           SizedBox(
             height: 36,
-            child: tripHotelLocation == null ? addComment("+ 버튼을 클릭하여 숙박하는 장소를 등록해보세요!") : LocationItemComponent(
-             location: tripHotelLocation!,
-              onRemoveButtonEvent: () {
-                setState(() {
-                  tripHotelLocation = null;
-                });
-                _showComment("숙박 장소가 삭제되었습니다.");
-              },
-            ),
+            child: tripHotelLocation == null
+                ? addComment("+ 버튼을 클릭하여 숙박하는 장소를 등록해보세요!")
+                : LocationItemComponent(
+                    location: tripHotelLocation!,
+                    onRemoveButtonEvent: () {
+                      setState(() {
+                        tripHotelLocation = null;
+                      });
+                      _showComment("숙박 장소가 삭제되었습니다.");
+                    },
+                  ),
           ),
 
           const SizedBox(height: 16),
@@ -259,9 +310,7 @@ class SetupComponentState extends ConsumerState<SetupComponent> {
             width: double.infinity, // 가로 꽉 채우기
             height: 50,
             child: ElevatedButton(
-              onPressed: () {
-                debugPrint('계획하기 버튼 클릭!');
-              },
+              onPressed: startPlanning,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.deepPurple,
                 foregroundColor: Colors.white,
@@ -293,6 +342,23 @@ class SetupComponentState extends ConsumerState<SetupComponent> {
       ),
     ),
   );
+
+  Future<void> startPlanning() async {
+    if (tripStartTime == null ||
+        tripEndTime == null ||
+        tripMeetingLocation == null) {
+      _showWarning("여행 기간과 집합 장소를 등록해주세요!");
+      return;
+    }
+    final payload = {
+      "hotel": tripHotelLocation?.toMessage(),
+      "meetingPlace": tripMeetingLocation?.toMessage(),
+      "meetingStartDate": tripStartTime?.toIso8601String(),
+      "meetingEndDate": tripEndTime?.toIso8601String(),
+      "wishToVisit": wishToVisit.map((e) => e.toMessage()).toList(),
+    };
+
+  }
 
   void _showWarning(String message) {
     ScaffoldMessenger.of(context).showSnackBar(

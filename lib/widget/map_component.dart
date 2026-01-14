@@ -26,17 +26,28 @@ class MapComponentState extends ConsumerState<MapComponent> {
     super.initState();
     mapMode = "default";
 
-    ref.read(mapControllerProvider.notifier).state.attach(
-      onAddPoi: onAddPoi, onModifyPoi: onModifyPoi, onRemovePoi: onRemovePoi
-    );
+    ref
+        .read(mapControllerProvider.notifier)
+        .state
+        .attach(
+          onAddPoi: onAddPoi,
+          onModifyPoi: onModifyPoi,
+          onRemovePoi: onRemovePoi,
+        );
   }
 
-  Future<void> onAddPoi(PlaceCategory poiCategory, void Function(LatLng position, Poi poi) onPoiAdded) async {
+  Future<void> onAddPoi(
+    PlaceCategory poiCategory,
+    void Function(LatLng position, Poi poi) onPoiAdded,
+  ) async {
     final completer = trackingClick = Completer<LatLng>();
     mapMode = "tracking";
     LatLng position = await completer.future;
 
-    Poi poi = await mapController.labelLayer.addPoi(position, style: styles[poiCategory]!);
+    Poi poi = await mapController.labelLayer.addPoi(
+      position,
+      style: styles[poiCategory]!,
+    );
     // PoiStyle poiStyle = PoiStyle(icon: KImage.fromAsset("image/${poiCategory.name}.png", 116, 146));
     // Poi poi = await mapController.labelLayer.addPoi(position, style: poiStyle);
 
@@ -51,7 +62,11 @@ class MapComponentState extends ConsumerState<MapComponent> {
     // await poi?.changeStyles(styles[placeCategory]!);
     if (poi != null) {
       await poi.remove();
-      await mapController.labelLayer.addPoi(poi.position, style: styles[placeCategory]!, id: poiId);
+      await mapController.labelLayer.addPoi(
+        poi.position,
+        style: styles[placeCategory]!,
+        id: poiId,
+      );
     }
   }
 
@@ -61,7 +76,8 @@ class MapComponentState extends ConsumerState<MapComponent> {
   }
 
   Future<void> onMapReady(KakaoMapController controller) async {
-    ref.read(kakaoMapControllerProvider.notifier).state = mapController = controller;
+    ref.read(kakaoMapControllerProvider.notifier).state = mapController =
+        controller;
 
     for (var placeCategory in PlaceCategory.values) {
       final image = KImage.fromAsset("image/${placeCategory.name}.png", 58, 73);

@@ -1,4 +1,3 @@
-
 class IBMAuthentic {
   final String accessToken;
   final String refreshToken;
@@ -8,7 +7,15 @@ class IBMAuthentic {
   final DateTime expiration;
   final List<String> scope;
 
-  IBMAuthentic._(this.accessToken, this.refreshToken, this.imsUserId, this.tokenType, this.expiresIn, this.expiration, this.scope);
+  IBMAuthentic._(
+    this.accessToken,
+    this.refreshToken,
+    this.imsUserId,
+    this.tokenType,
+    this.expiresIn,
+    this.expiration,
+    this.scope,
+  );
 
   @override
   String toString() {

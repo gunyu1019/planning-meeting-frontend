@@ -9,7 +9,12 @@ class LocationModel {
   final LatLng position;
 
   // 생성자: 필수값으로 지정 (required)
-  LocationModel({required this.id, required this.name, required this.category, required this.position});
+  LocationModel({
+    required this.id,
+    required this.name,
+    required this.category,
+    required this.position,
+  });
 
   @override
   String toString() {
@@ -20,6 +25,6 @@ class LocationModel {
     "name": name,
     "latitude": position.latitude,
     "longitude": position.longitude,
-    "category": category.name
+    "category": category.name,
   };
 }

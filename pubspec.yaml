@@ -22,6 +22,9 @@ dependencies:
       url: 'https://github.com/gunyu1019/flutter_kakao_maps.git'
       ref: '8f483810e5db53c53c58e0572539a5c8c2fc5f41'
 
+  # flutter_chat_ui
+  provider: ^6.1.5+1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

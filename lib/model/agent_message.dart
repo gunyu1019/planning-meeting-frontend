@@ -1,5 +1,3 @@
-
-
 class AgentMessage {
   final String id;
   final String role;
@@ -12,5 +10,12 @@ class AgentMessage {
 
   final String content;
 
-  AgentMessage(this.id, this.role, this.threadId, this.tenantId, this.created, this.content);
+  AgentMessage(
+    this.id,
+    this.role,
+    this.threadId,
+    this.tenantId,
+    this.created,
+    this.content,
+  );
 }

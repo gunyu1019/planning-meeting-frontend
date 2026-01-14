@@ -1,7 +1,1 @@
-enum PlaceCategory {
-  cafe,
-  food,
-  hotel,
-  shopping,
-  tourism,
-}
+enum PlaceCategory { cafe, food, hotel, shopping, tourism }
