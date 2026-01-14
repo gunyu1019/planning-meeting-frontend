@@ -21,6 +21,8 @@ class SetupComponentState extends ConsumerState<SetupComponent> {
   final TextEditingController _startDateController = TextEditingController();
   final TextEditingController _endDateController = TextEditingController();
 
+  bool _isLoading = false;
+
   // Agent AI로 보낼 여러 변수들~
   DateTime? tripStartTime;
   DateTime? tripEndTime;
@@ -54,8 +56,7 @@ class SetupComponentState extends ConsumerState<SetupComponent> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget survey(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -314,7 +315,7 @@ class SetupComponentState extends ConsumerState<SetupComponent> {
             width: double.infinity, // 가로 꽉 채우기
             height: 50,
             child: ElevatedButton(
-              onPressed: startPlanning,
+              onPressed: _submitPlan,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.deepPurple,
                 foregroundColor: Colors.white,
@@ -333,6 +334,36 @@ class SetupComponentState extends ConsumerState<SetupComponent> {
     );
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        survey(context),
+        if (_isLoading)
+          Container(
+            width: double.infinity,
+            height: double.infinity,
+            color: Colors.black54,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              spacing: 16.0,
+              children: [
+                CircularProgressIndicator(
+                  color: Colors.blue,
+                ),
+                Text(
+                  "최적의 여행 동선을 구성하고 있습니다!\n잠시만 기다려주세요..!",
+                  style: TextStyle(fontSize: 15, color: Colors.white),
+                  textAlign: TextAlign.center,
+                )
+              ]
+            ),
+          )
+      ],
+    );
+  }
+
   Widget addComment(comment) => SizedBox(
     width: double.infinity,
     child: Center(
@@ -347,13 +378,16 @@ class SetupComponentState extends ConsumerState<SetupComponent> {
     ),
   );
 
-  Future<void> startPlanning() async {
+  Future<void> _submitPlan() async {
     if (tripStartTime == null ||
         tripEndTime == null ||
         tripMeetingLocation == null) {
       _showWarning("여행 기간과 집합 장소를 등록해주세요!");
       return;
     }
+    setState(() {
+      _isLoading = true;
+    });
     final payload = {
       "hotel": tripHotelLocation?.toMessage(),
       "meetingPlace": tripMeetingLocation?.toMessage(),
@@ -378,6 +412,7 @@ class SetupComponentState extends ConsumerState<SetupComponent> {
   }
 
   void _showWarning(String message) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
@@ -388,6 +423,7 @@ class SetupComponentState extends ConsumerState<SetupComponent> {
   }
 
   void _showComment(String message) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
