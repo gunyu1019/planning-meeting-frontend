@@ -37,7 +37,11 @@ void main() async {
         )
 
       ],
-      child: MaterialApp(theme: ThemeData(), home: const MainPage()),
+      child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(),
+          home: const MainPage()
+      ),
     ),
   );
 }
