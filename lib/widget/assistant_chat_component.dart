@@ -2,30 +2,41 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_core/flutter_chat_core.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:planning_meeting/provider/travel_editor_provider.dart';
+import 'package:planning_meeting/widget/assistant_message_component.dart';
 
-class AssistantChatComponent extends StatefulWidget {
+class AssistantChatComponent extends ConsumerStatefulWidget {
   const AssistantChatComponent({super.key});
 
   @override
-  AssistantChatComponentState createState() => AssistantChatComponentState();
+  ConsumerState<AssistantChatComponent> createState() =>
+      AssistantChatComponentState();
 }
 
-class AssistantChatComponentState extends State<AssistantChatComponent> {
-  final _chatController = InMemoryChatController();
-
-  @override
-  void dispose() {
-    _chatController.dispose();
-    super.dispose();
-  }
-
+class AssistantChatComponentState
+    extends ConsumerState<AssistantChatComponent> {
   @override
   Widget build(BuildContext context) {
+    final ChatController chatController = ref
+        .watch(chatControllerProvider.notifier)
+        .state!;
+
     return Chat(
-      chatController: _chatController,
+      builders: Builders(
+        textMessageBuilder:
+            (
+              BuildContext context,
+              TextMessage message,
+              int index, {
+              required bool isSentByMe,
+              MessageGroupStatus? groupStatus,
+            }) => AssistantMessageComponent(message: message, index: index),
+      ),
+      chatController: chatController,
       currentUserId: 'user',
       onMessageSend: (text) {
-        _chatController.insertMessage(
+        chatController.insertMessage(
           TextMessage(
             // Better to use UUID or similar for the ID - IDs must be unique
             id: '${Random().nextInt(1000) + 1}',
