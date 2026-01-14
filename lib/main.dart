@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakao_map_sdk/kakao_map_sdk.dart';
-import 'package:planning_meeting/provider/agent_ai_provider.dart';
+import 'package:planning_meeting/provider/travel_editor_provider.dart';
 import 'package:planning_meeting/screen/travel_editor.dart';
 import 'package:planning_meeting/services/ibm_cloud_service.dart';
 

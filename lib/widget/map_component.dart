@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakao_map_sdk/kakao_map_sdk.dart';
-import 'package:planning_meeting/provider/map_provider.dart';
+import 'package:planning_meeting/provider/travel_editor_provider.dart';
 
 import '../model/place_category.dart';
 

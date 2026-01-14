@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:planning_meeting/widget/setup_component.dart';
-
-import '../provider/menu_provider.dart';
+import 'package:planning_meeting/provider/travel_editor_provider.dart';
 import 'assistant_chat_component.dart' show AssistantChatComponent;
 
 class MenuComponent extends ConsumerStatefulWidget {

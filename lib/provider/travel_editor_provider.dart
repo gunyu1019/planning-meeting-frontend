@@ -1,6 +1,9 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:kakao_map_sdk/kakao_map_sdk.dart';
 import '../model/place_category.dart';
+import '../services/ibm_cloud_service.dart';
+import '../services/ibm_watsonx_service.dart';
 
 
 class MapController {
@@ -33,3 +36,19 @@ class MapController {
 // 카카오맵을 혹시나.. 다룰까??
 final kakaoMapControllerProvider = StateProvider<KakaoMapController?>((ref) => null);
 final mapControllerProvider = StateProvider((ref) => MapController());
+
+class MenuControllerNotifier extends StateNotifier<String> {
+  MenuControllerNotifier() : super("setup");
+
+  void changePage(String pageId) => state = pageId;
+}
+
+
+final menuControllerProvider = StateNotifierProvider<MenuControllerNotifier, String>((ref)
+  => MenuControllerNotifier()
+);
+
+
+
+final ibmCloudProvider = Provider<IBMCloud?>((ref) => null);
+final ibmWatsonXProvider = Provider<WatsonX?>((ref) => null);
