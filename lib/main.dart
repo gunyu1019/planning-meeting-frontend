@@ -28,6 +28,14 @@ void main() async {
       overrides: [
         ibmCloudProvider.overrideWithValue(ibmCloud),
         ibmWatsonXProvider.overrideWithValue(ibmWatsonX),
+        ibmChatAgent.overrideWithValue((content, [threadId]) => ibmWatsonX.chat(
+                    agentId: agentId,
+                    environmentId: environmentId,
+                    message: content,
+                    threadId: threadId
+                )
+        )
+
       ],
       child: MaterialApp(theme: ThemeData(), home: const MainPage()),
     ),
