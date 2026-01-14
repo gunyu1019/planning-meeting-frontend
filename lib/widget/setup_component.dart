@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:planning_meeting/widget/location_item_component.dart';
 import 'package:planning_meeting/model/location.dart';
-import 'package:planning_meeting/provider/travel_editor_provider.dart';
+import 'package:planning_meeting/provider/map_provider.dart';
 
 import '../model/place_category.dart';
 
