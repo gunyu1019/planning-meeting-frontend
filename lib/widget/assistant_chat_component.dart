@@ -16,11 +16,47 @@ class AssistantChatComponent extends ConsumerStatefulWidget {
 
 class AssistantChatComponentState
     extends ConsumerState<AssistantChatComponent> {
+
+  Future<void> onMessageSend(String text) async {
+    ref.read(chatControllerProvider).insertMessage(
+      TextMessage(
+        // Better to use UUID or similar for the ID - IDs must be unique
+        id: '${Random().nextInt(1000) + 1}',
+        authorId: 'user',
+        createdAt: DateTime.now().toUtc(),
+        text: text,
+      ),
+    );
+    final previousThreadId = ref.read(messages).lastOrNull?.threadId;
+    final newAnswer = await ref.read(ibmChatAgent)?.call(text, previousThreadId);
+    if (newAnswer != null) {
+      ref.read(messages).add(newAnswer);
+      ref.read(chatControllerProvider).insertMessage(
+        TextMessage(
+          // Better to use UUID or similar for the ID - IDs must be unique
+          id: '${Random().nextInt(1000) + 1}',
+          authorId: 'assistant',
+          createdAt: DateTime.now().toUtc(),
+          text: newAnswer.content,
+        ),
+      );
+    } else {
+      ref.read(chatControllerProvider).insertMessage(
+        TextMessage(
+          // Better to use UUID or similar for the ID - IDs must be unique
+          id: '${Random().nextInt(1000) + 1}',
+          authorId: 'assistant',
+          createdAt: DateTime.now().toUtc(),
+          text: "응답을 실패했습니다.",
+        ),
+      );
+    }
+
+  }
+
   @override
   Widget build(BuildContext context) {
-    final ChatController chatController = ref
-        .watch(chatControllerProvider.notifier)
-        .state!;
+    final chatController = ref.watch(chatControllerProvider);
 
     return Chat(
       builders: Builders(
@@ -35,17 +71,7 @@ class AssistantChatComponentState
       ),
       chatController: chatController,
       currentUserId: 'user',
-      onMessageSend: (text) {
-        chatController.insertMessage(
-          TextMessage(
-            // Better to use UUID or similar for the ID - IDs must be unique
-            id: '${Random().nextInt(1000) + 1}',
-            authorId: 'user',
-            createdAt: DateTime.now().toUtc(),
-            text: text,
-          ),
-        );
-      },
+      onMessageSend: onMessageSend,
       resolveUser: (UserID id) async {
         return User(id: id, name: 'John Doe');
       },
