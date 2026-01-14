@@ -59,22 +59,30 @@ class WatsonX {
       },
       "thread_id": threadId
     };
-    final response = await _dio.post(
-        "/v1/orchestrate/runs",
-        queryParameters: parameter,
-        data: data
-    );
 
     if (stream) {
-      Stream<List<int>> stream = response.data.stream;
+      final response = await _dio.post<ResponseBody>(
+          "/v1/orchestrate/runs",
+          queryParameters: parameter,
+          data: data,
+          options: Options(responseType: ResponseType.stream)
+      );
+      Stream<List<int>> stream = response.data!.stream;
 
       // wait!
       List<int> lastChunk = await stream.last;
 
       String rawData = utf8.decode(lastChunk);
-      Map<String, dynamic> data = json.decode(rawData);
-      return data["data"]["run_id"];
+      String jsonRawData = '[${rawData.replaceAll("}\n", "},\n")}]'.replaceAll("},\n]", "}\n]");
+      List<dynamic> result = json.  decode(jsonRawData);
+      return result.last["data"]["run_id"];
     }
+    final response = await _dio.post(
+        "/v1/orchestrate/runs",
+        queryParameters: parameter,
+        data: data,
+        options: Options(responseType: ResponseType.json)
+    );
     return response.data["run_id"];
   }
 
@@ -101,7 +109,7 @@ class WatsonX {
       agentResult["role"],
       taskResult["thread_id"],
       taskResult["tenant_id"],
-      DateTime.parse(agentResult["created"]),
+      DateTime.parse(agentResult["created_on"]),
       agentResult["content"][0]["text"]
     );
     return agentMessage;
