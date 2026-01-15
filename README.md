@@ -1,16 +1,23 @@
-# planning_meeting
+# Project. Planning Meeting (🗺️)
 
-An application to provide travel itineraries.
+| 여행 초안                             | 여행 계획표                                |
+|-----------------------------------|---------------------------------------|
+| ![img.png](.github/image/img.png) | ![img_1.png](.github/image/img_1.png) |
 
-## Getting Started
+Project. Planning Meeting (🗺️)는 Agent AI를 활용하여 여행 계획을 세워주는 프로그램입니다.<br/>
 
-This project is a starting point for a Flutter application.
+여행을 계획하는 과정에는 이동 경로, 시간 분배 등 많은 시간과 노력이 필요합니다.<br/>
+특히 여러 명에서 특정 지역을 함께 여행을 가게된다면 개인마다 방문해보고 싶은 장소가 있을 것입니다.
+그리고 적어도 한 사람은 여행 일정을 계획하곤 합니다.<br/>
 
-A few resources to get you started if this is your first Flutter project:
+만약 Agent AI가 "가보고 싶은 장소를 모두 종합하여 사용자에게 여행 계획을 제공해주면 어떨까요?"라는 발상에 시작된 프로젝트입니다.<br/>
+여행을 가고 싶은 사용자는 그저 가고싶은 장소를 지도에 클릭하기만 하면 됩니다. <br/>
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+그렇다고 인공지능이 여행 계획을 구성해줘도 실행하기 어려울 것입니다.<br/>
+누구는 A라는 장소에서 1시간 동안 머물고 싶고, 누구는 B라는 장소에서 10분만 머물고 싶을 수도 있습니다.<br/>
+이때 사용자는 LLM과 직접 소통을 하면서 여행 계획을 구성하는 것입니다.<br/>
+"나는 ㅇㅇ상점에서 1시간 동안 쇼핑할 것 같아."라고 말해주면 인공지능은 사용자의 요구사항을 반영한 여행 계획을 다시 세우게 됩니다.<br/>
+Agent AI를 이용하여 사용자 맞춤형 여행 계획을 제공하면 어떨까요?<br/>
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+본 프로젝트는 IBM Korea, 데이터솔루션에서 진행한 IBM AI해커톤 출품 작품입니다.<br/>
+AI 오케스트레이션라는 기술을 활용하여 Agent AI는 사용자에게 최적의 여행 계획를 제공합니다.
