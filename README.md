@@ -21,3 +21,11 @@ Agent AI를 이용하여 사용자 맞춤형 여행 계획을 제공하면 어�
 
 본 프로젝트는 IBM Korea, 데이터솔루션에서 진행한 IBM AI해커톤 출품 작품입니다.<br/>
 AI 오케스트레이션라는 기술을 활용하여 Agent AI는 사용자에게 최적의 여행 계획를 제공합니다.
+
+## Reference
+* [gunyu1019/planning_meeting-agent-ai](https://github.com/gunyu1019/planning-meeting-agent-ai]: 본 프로젝트에 사용되는 Agent AI의 Prompt(프롬포트)입니다.
+* [gunyu1019/flutter-kakao-maps](https://github.com/gunyu1019/flutter_kakao_maps): 본 프로젝트에 사용된 카카오 지도 SDK 입니다.
+* [IBM Cloud/WatsonX Orchestrate-d3](https://cloud.ibm.com/): 본 프로젝트의 필요한 Agent AI를 제공합니다.
+* [Flyer Chat](https://flyer.chat/): LLM과 소통하기 위한 채팅 UI를 제공합니다.
+* [Open Trip Planner](https://github.com/opentripplanner/OpenTripPlanner): 출발 지점에서 도착 지점까지 갈 수 있는 대중교통 경로를 제공하는 오픈소스 API입니다.
+* [Korean Transport Database (KTDB)](https://www.ktdb.go.kr): 한국 GTFS(General Transit Feed Specification) 데이터베이스를 제공합니다.
