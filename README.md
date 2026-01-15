@@ -23,7 +23,7 @@ Agent AI를 이용하여 사용자 맞춤형 여행 계획을 제공하면 어�
 AI 오케스트레이션라는 기술을 활용하여 Agent AI는 사용자에게 최적의 여행 계획를 제공합니다.
 
 ## Reference
-* [gunyu1019/planning_meeting-agent-ai](https://github.com/gunyu1019/planning-meeting-agent-ai]: 본 프로젝트에 사용되는 Agent AI의 Prompt(프롬포트)입니다.
+* [gunyu1019/planning_meeting-agent-ai](https://github.com/gunyu1019/planning-meeting-agent-ai): 본 프로젝트에 사용되는 Agent AI의 Prompt(프롬포트)입니다.
 * [gunyu1019/flutter-kakao-maps](https://github.com/gunyu1019/flutter_kakao_maps): 본 프로젝트에 사용된 카카오 지도 SDK 입니다.
 * [IBM Cloud/WatsonX Orchestrate-d3](https://cloud.ibm.com/): 본 프로젝트의 필요한 Agent AI를 제공합니다.
 * [Flyer Chat](https://flyer.chat/): LLM과 소통하기 위한 채팅 UI를 제공합니다.
